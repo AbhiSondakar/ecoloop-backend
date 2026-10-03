@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ecoloop
+      POSTGRES_USER: ecoloop
+      POSTGRES_PASSWORD: ecoloop
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecoloop -d ecoloop"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8090:8090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecoloop
+      SPRING_DATASOURCE_USERNAME: ecoloop
+      SPRING_DATASOURCE_PASSWORD: ecoloop
+      REDIS_URL: redis://redis:6379
+      SPRING_PROFILES_ACTIVE: docker
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@ecoloop.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin@123}
+      ROBOFLOW_API_KEY: ${ROBOFLOW_API_KEY:-}
+      ROBOFLOW_WORKFLOW: ${ROBOFLOW_WORKFLOW:-abhishek-sondakar-k3rfkb/workflows/e-waste-ve-waste-qmxtt-zuyip/1-yolo26n-t1-logic}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
