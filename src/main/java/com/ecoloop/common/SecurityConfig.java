@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .maximumSessions(5))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico",
-                                 "/dev/**",
+                                 "/dev/**", "/error",
                                  "/actuator/health", "/actuator/health/**",
                                  "/api/auth/login", "/api/auth/register", "/api/auth/csrf",
                                  "/api/auth/forgot-password",
@@ -66,11 +66,14 @@ public class SecurityConfig {
             .build();
     }
 
+    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins}")
+    private List<String> allowedOrigins;
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOriginPatterns(allowedOrigins);
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET","POST","PUT","PATCH","DELETE","OPTIONS"));
         config.setExposedHeaders(List.of("Set-Cookie","X-Session-Id","X-XSRF-TOKEN"));
