@@ -18,8 +18,8 @@ spring:
     username: ${DATABASE_USERNAME:ecoloop}
     password: ${DATABASE_PASSWORD:ecoloop}
     hikari:
-      maximum-pool-size: 3
-      minimum-idle: 1
+      maximum-pool-size: ${DB_POOL_MAX:15}
+      minimum-idle: ${DB_POOL_MIN:5}
       connection-timeout: 20000
       idle-timeout: 300000
   jpa:
@@ -61,3 +61,11 @@ ai:
   roboflow:
     api-key: ${ROBOFLOW_API_KEY:}
     workflow: ${ROBOFLOW_WORKFLOW:abhishek-sondakar-k3rfj/e-waste-qmxtt-zuyip-1-yolo26n-t1}
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:8081}
+
+logging:
+  level:
+    root: INFO
+    com.ecoloop: ${APP_LOG_LEVEL:DEBUG}

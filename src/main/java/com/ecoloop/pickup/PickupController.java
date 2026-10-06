@@ -44,54 +44,55 @@ public class PickupController {
         Instant scheduledAt) {}
 
     @PostMapping
-    public PickupRequest create(@Valid @RequestBody CreatePickup body, HttpServletRequest r) {
+    public PickupWithDevice create(@Valid @RequestBody CreatePickup body, HttpServletRequest r) {
         PickupRequest pickup = pickupService.createPickup(user(r), body.deviceId(), body.address(), body.scheduledAt());
         log.info("Pickup created: id={} user={} device={}", pickup.getId(), user(r), body.deviceId());
-        return pickup;
+        return pickupService.enrich(pickup);
     }
 
     @GetMapping
-    public List<PickupRequest> list(HttpServletRequest r) {
-        return pickups.findAllByUserIdOrderByCreatedAtDesc(user(r));
+    public List<PickupWithDevice> list(HttpServletRequest r) {
+        return pickupService.enrich(pickups.findAllByUserIdOrderByCreatedAtDesc(user(r)));
     }
 
     @GetMapping("/{id}")
-    public PickupRequest get(@PathVariable UUID id, HttpServletRequest r) {
-        return pickups.findByIdAndUserId(id, user(r))
+    public PickupWithDevice get(@PathVariable UUID id, HttpServletRequest r) {
+        PickupRequest pickup = pickups.findByIdAndUserId(id, user(r))
             .orElseThrow(() -> new NoSuchElementException("Pickup not found"));
+        return pickupService.enrich(pickup);
     }
 
     @PostMapping("/{id}/accept")
     @PreAuthorize("hasRole('PARTNER')")
-    public PickupRequest accept(@PathVariable UUID id, HttpServletRequest r) {
+    public PickupWithDevice accept(@PathVariable UUID id, HttpServletRequest r) {
         UUID actor = user(r);
         PickupRequest result = pickupService.acceptByPartnerUser(actor, id);
         log.info("Pickup accepted: id={} by partner={}", id, actor);
-        return result;
+        return pickupService.enrich(result);
     }
 
     @PostMapping("/{id}/complete")
     @PreAuthorize("hasRole('PARTNER')")
-    public PickupRequest complete(@PathVariable UUID id, HttpServletRequest r) {
+    public PickupWithDevice complete(@PathVariable UUID id, HttpServletRequest r) {
         UUID actor = user(r);
         PickupRequest result = pickupService.completeForPartnerUser(actor, id);
         log.info("Pickup completed: id={} by partner={}", id, actor);
-        return result;
+        return pickupService.enrich(result);
     }
 
     @PostMapping("/{id}/reject")
     @PreAuthorize("hasRole('PARTNER')")
-    public PickupRequest reject(@PathVariable UUID id, HttpServletRequest r) {
+    public PickupWithDevice reject(@PathVariable UUID id, HttpServletRequest r) {
         UUID actor = user(r);
         PickupRequest result = pickupService.rejectByPartnerUser(actor, id);
         log.info("Pickup rejected: id={} by partner={}", id, actor);
-        return result;
+        return pickupService.enrich(result);
     }
 
     @PostMapping("/{id}/cancel")
-    public PickupRequest cancel(@PathVariable UUID id, HttpServletRequest r) {
+    public PickupWithDevice cancel(@PathVariable UUID id, HttpServletRequest r) {
         PickupRequest saved = pickupService.cancelPickup(user(r), id);
         log.info("Pickup cancelled: id={} user={}", id, user(r));
-        return saved;
+        return pickupService.enrich(saved);
     }
 }

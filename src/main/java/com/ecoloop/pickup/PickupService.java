@@ -24,16 +24,19 @@ public class PickupService {
     private final NotificationService notifications;
     private final AuditService audit;
     private final org.springframework.context.ApplicationEventPublisher events;
+    private final com.ecoloop.device.DeviceRepository devices;
 
     public PickupService(PickupRepository pickups, PartnerRepository partners,
                          RewardLedgerRepository ledger, NotificationService notifications,
-                         AuditService audit, org.springframework.context.ApplicationEventPublisher events) {
+                         AuditService audit, org.springframework.context.ApplicationEventPublisher events,
+                         com.ecoloop.device.DeviceRepository devices) {
         this.pickups = pickups;
         this.partners = partners;
         this.ledger = ledger;
         this.notifications = notifications;
         this.audit = audit;
         this.events = events;
+        this.devices = devices;
     }
 
     @Transactional
@@ -155,5 +158,15 @@ public class PickupService {
         audit.record(householdId, actorRole, "pickup.completed",
             "pickup", pickup.getId(), "success");
         return saved;
+    }
+
+    public PickupWithDevice enrich(PickupRequest pickup) {
+        if (pickup.getDeviceId() == null) return PickupWithDevice.from(pickup, null);
+        var device = devices.findById(pickup.getDeviceId()).orElse(null);
+        return PickupWithDevice.from(pickup, device);
+    }
+
+    public java.util.List<PickupWithDevice> enrich(java.util.List<PickupRequest> pickups) {
+        return pickups.stream().map(this::enrich).toList();
     }
 }

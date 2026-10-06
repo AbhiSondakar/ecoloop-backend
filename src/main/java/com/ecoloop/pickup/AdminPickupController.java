@@ -16,21 +16,23 @@ import java.util.UUID;
 public class AdminPickupController {
   private final PickupRepository pickups;
   private final PartnerRepository partners;
+  private final PickupService pickupService;
 
-  public AdminPickupController(PickupRepository pickups, PartnerRepository partners) {
+  public AdminPickupController(PickupRepository pickups, PartnerRepository partners, PickupService pickupService) {
     this.pickups = pickups;
     this.partners = partners;
+    this.pickupService = pickupService;
   }
 
   @GetMapping
-  public List<PickupRequest> list() {
-    return pickups.findAll();
+  public List<PickupWithDevice> list() {
+    return pickupService.enrich(pickups.findAll());
   }
 
   public record ReassignRequest(UUID partnerId) {}
 
   @PostMapping("/{id}/reassign")
-  public PickupRequest reassign(@PathVariable UUID id,
+  public PickupWithDevice reassign(@PathVariable UUID id,
                                 @RequestBody(required = false) ReassignRequest body) {
     PickupRequest pickup = pickups.findById(id)
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Pickup not found"));
@@ -42,6 +44,6 @@ public class AdminPickupController {
       pickup.setPartnerId(null);
     }
     pickup.setUpdatedAt(Instant.now());
-    return pickups.save(pickup);
+    return pickupService.enrich(pickups.save(pickup));
   }
 }

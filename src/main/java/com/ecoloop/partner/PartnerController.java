@@ -90,9 +90,9 @@ public class PartnerController {
 
     @GetMapping("/jobs")
     @PreAuthorize("hasRole('PARTNER')")
-    public List<PickupRequest> jobs(HttpServletRequest request) {
+    public List<com.ecoloop.pickup.PickupWithDevice> jobs(HttpServletRequest request) {
         Partner partner = currentPartner(request);
-        return pickups.findAllByPartnerId(partner.getId());
+        return pickupService.enrich(pickups.findAllByPartnerId(partner.getId()));
     }
 
     @GetMapping("/me")
@@ -162,14 +162,14 @@ public class PartnerController {
 
     @GetMapping("/jobs/{id}")
     @PreAuthorize("hasRole('PARTNER')")
-    public PickupRequest job(@PathVariable UUID id, HttpServletRequest request) {
+    public com.ecoloop.pickup.PickupWithDevice job(@PathVariable UUID id, HttpServletRequest request) {
         Partner partner = currentPartner(request);
         PickupRequest pickup = pickups.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Pickup not found"));
         if (!partner.getId().equals(pickup.getPartnerId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not assigned to this partner");
         }
-        return pickup;
+        return pickupService.enrich(pickup);
     }
 
     @PostMapping("/offers/{id}/accept")
@@ -187,7 +187,7 @@ public class PartnerController {
 
     @PostMapping("/jobs/{id}/verify")
     @PreAuthorize("hasRole('PARTNER')")
-    public PickupRequest verifyJob(@PathVariable UUID id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
+    public com.ecoloop.pickup.PickupWithDevice verifyJob(@PathVariable UUID id, @RequestBody Map<String, Object> body, HttpServletRequest request) {
         Partner partner = currentPartner(request);
         PickupRequest pickup = pickups.findById(id)
             .orElseThrow(() -> new NoSuchElementException("Pickup not found"));
@@ -196,14 +196,14 @@ public class PartnerController {
         }
         pickup.setStatus("in_progress");
         pickup.setUpdatedAt(Instant.now());
-        return pickups.save(pickup);
+        return pickupService.enrich(pickups.save(pickup));
     }
 
     @PostMapping("/jobs/{id}/complete")
     @PreAuthorize("hasRole('PARTNER')")
-    public PickupRequest completeJob(@PathVariable UUID id, HttpServletRequest request) {
+    public com.ecoloop.pickup.PickupWithDevice completeJob(@PathVariable UUID id, HttpServletRequest request) {
         Partner partner = currentPartner(request);
-        return pickupService.completeForPartner(partner.getId(), id);
+        return pickupService.enrich(pickupService.completeForPartner(partner.getId(), id));
     }
 
     private Partner currentPartner(HttpServletRequest request) {
