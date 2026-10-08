@@ -43,18 +43,24 @@ public class AuditLog {
     protected AuditLog() {}
 
     public AuditLog(UUID actorId, String actorRole, String action, String entityType, UUID entityId, String result) {
+<<<<<<< HEAD
         this(actorId, actorRole, action, entityType, entityId, result, null);
     }
 
     public AuditLog(UUID actorId, String actorRole, String action, String entityType, UUID entityId,
                     String result, Map<String, Object> details) {
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         this.actorId = actorId;
         this.actorRole = actorRole;
         this.action = action;
         this.entityType = entityType;
         this.entityId = entityId;
         this.result = result;
+<<<<<<< HEAD
         this.details = details;
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 
     public UUID getId() { return id; }

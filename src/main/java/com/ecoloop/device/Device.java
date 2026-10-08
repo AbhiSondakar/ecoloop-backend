@@ -42,7 +42,11 @@ public class Device {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt = Instant.now();
 
+<<<<<<< HEAD
     public Device() {}
+=======
+    protected Device() {}
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 
     public Device(UUID userId, String condition, String category, BigDecimal aiConfidence, String aiStatus) {
         this.userId = userId;

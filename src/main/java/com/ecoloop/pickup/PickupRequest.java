@@ -32,6 +32,7 @@ public class PickupRequest {
     @Column(name = "completed_at")
     private Instant completedAt;
 
+<<<<<<< HEAD
     @Column(name = "verified_category", length = 50)
     private String verifiedCategory;
 
@@ -50,6 +51,8 @@ public class PickupRequest {
     @Column(name = "verified_by")
     private UUID verifiedBy;
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
 
@@ -80,6 +83,7 @@ public class PickupRequest {
     public void setScheduledAt(Instant scheduledAt) { this.scheduledAt = scheduledAt; }
     public Instant getCompletedAt() { return completedAt; }
     public void setCompletedAt(Instant completedAt) { this.completedAt = completedAt; }
+<<<<<<< HEAD
     public String getVerifiedCategory() { return verifiedCategory; }
     public void setVerifiedCategory(String verifiedCategory) { this.verifiedCategory = verifiedCategory; }
     public String getVerifiedCondition() { return verifiedCondition; }
@@ -92,10 +96,13 @@ public class PickupRequest {
     public void setVerifiedAt(Instant verifiedAt) { this.verifiedAt = verifiedAt; }
     public UUID getVerifiedBy() { return verifiedBy; }
     public void setVerifiedBy(UUID verifiedBy) { this.verifiedBy = verifiedBy; }
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+<<<<<<< HEAD
 
     public void verify(String category, String condition, String notes, String evidenceUrl, UUID verifiedBy) {
         this.status = "verified";
@@ -107,4 +114,6 @@ public class PickupRequest {
         this.verifiedAt = Instant.now();
         this.updatedAt = Instant.now();
     }
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

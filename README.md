@@ -30,6 +30,7 @@ The response should be reachable even though protected API endpoints still requi
 - `REDIS_URL`
 - `SERVER_ADDRESS` (default `0.0.0.0`)
 - `PORT`
+<<<<<<< HEAD
 - `COOKIE_SECURE` (default `true`; keep enabled for HTTPS deployments)
 - `COOKIE_SAME_SITE` (default `none` for a separately hosted HTTPS frontend; use `lax` only when frontend and API are same-site)
 - `CORS_ALLOWED_ORIGINS` (comma-separated exact frontend origins, including scheme and port when applicable; for example `https://admin.example.com`)
@@ -48,3 +49,7 @@ New device photos, partner licenses, and pickup evidence are stored in PostgreSQ
 Existing uploads created before this change still use their recorded filesystem path when their file is present. A database migration cannot restore file bytes that were already lost when an ephemeral host restarted or redeployed; those historical image links will continue to return not found.
 
 Database-backed files make PostgreSQL larger and increase backup and restore time. Include the database in regular backups and monitor its storage as uploads grow. Each upload remains limited to 5 MB.
+=======
+
+No bearer-token configuration is required. Session expiry defaults to seven days and login rotates the session ID to prevent fixation.
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c

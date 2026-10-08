@@ -1,5 +1,6 @@
 package com.ecoloop.routing;
 
+<<<<<<< HEAD
 import com.ecoloop.device.Device;
 import com.ecoloop.device.DeviceRepository;
 import com.ecoloop.partner.Partner;
@@ -8,12 +9,18 @@ import com.ecoloop.pickup.PickupRepository;
 import com.ecoloop.pickup.PickupRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+=======
+import com.ecoloop.partner.Partner;
+import com.ecoloop.partner.PartnerRepository;
+import com.ecoloop.pickup.PickupRepository;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
+<<<<<<< HEAD
 import java.util.*;
 
 @Service
@@ -36,12 +43,29 @@ public class RoutingService {
         this.partners = partners;
         this.pickups = pickups;
         this.devices = devices;
+=======
+import java.util.UUID;
+
+@Service
+public class RoutingService {
+    private final RoutingOfferRepository offers;
+    private final PartnerRepository partners;
+    private final com.ecoloop.pickup.PickupService pickupService;
+
+    public RoutingService(RoutingOfferRepository offers, PartnerRepository partners, com.ecoloop.pickup.PickupService pickupService) {
+        this.offers = offers;
+        this.partners = partners;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         this.pickupService = pickupService;
     }
 
     public double score(boolean capabilityMatch, double conditionFit, double distanceScore,
                         double ratingScore, double loadScore) {
+<<<<<<< HEAD
         return .30 * (capabilityMatch ? 1.0 : 0.0)
+=======
+        return .30 * (capabilityMatch ? 1 : 0)
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
             + .20 * conditionFit
             + .20 * distanceScore
             + .15 * ratingScore
@@ -51,6 +75,7 @@ public class RoutingService {
     @Transactional
     public RoutingOffer acceptOffer(UUID partnerUserId, UUID offerId) {
         Partner partner = requirePartner(partnerUserId);
+<<<<<<< HEAD
         if (!"approved".equalsIgnoreCase(partner.getStatus())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Partner is not approved");
         }
@@ -66,6 +91,13 @@ public class RoutingService {
 
         offer.accept();
         RoutingOffer saved = offers.save(offer);
+=======
+        var offer = offers.findByIdAndPartnerId(offerId, partner.getId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer not found"));
+        
+        offer.accept();
+        var saved = offers.save(offer);
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         pickupService.acceptByPartnerUser(partnerUserId, saved.getPickupId());
         return saved;
     }
@@ -90,6 +122,7 @@ public class RoutingService {
     @org.springframework.context.event.EventListener
     @Transactional
     public void onPickupCreated(com.ecoloop.pickup.PickupCreatedEvent event) {
+<<<<<<< HEAD
         createTopNOffers(event.pickupId());
     }
 
@@ -146,6 +179,11 @@ public class RoutingService {
             }
         }
         log.info("Dispatched {} routing offers for pickup: {}", topN.size(), pickupId);
+=======
+        partners.findAllByStatus("approved").forEach(partner ->
+            offers.save(new com.ecoloop.routing.RoutingOffer(event.pickupId(), partner.getId(),
+                Instant.now().plusSeconds(24 * 60 * 60))));
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 
     public void cancelOffersForPickup(UUID pickupId) {
@@ -159,6 +197,7 @@ public class RoutingService {
 
     @Transactional
     public RoutingOffer rejectOffer(UUID partnerUserId, UUID offerId) {
+<<<<<<< HEAD
         return rejectOffer(partnerUserId, offerId, null);
     }
 
@@ -176,6 +215,12 @@ public class RoutingService {
 
         offer.reject(reason);
         log.info("Offer {} rejected by partner {}: reason={}", offerId, partner.getId(), reason);
+=======
+        Partner partner = requirePartner(partnerUserId);
+        var offer = offers.findByIdAndPartnerId(offerId, partner.getId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Offer not found"));
+        offer.reject();
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         return offers.save(offer);
     }
 
@@ -188,6 +233,7 @@ public class RoutingService {
     public UUID partnerIdForUser(UUID partnerUserId) {
         return requirePartner(partnerUserId).getId();
     }
+<<<<<<< HEAD
 
     public void enforceOfferNotExpired(RoutingOffer offer) {
         if (offer.getExpiresAt() == null) {
@@ -208,4 +254,6 @@ public class RoutingService {
     }
 
     private record ScoredPartner(Partner partner, double score) {}
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

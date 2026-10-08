@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 INSERT INTO reward_catalog (id, name, description, points_cost) VALUES ('10000000-0000-0000-0000-000000000001', 'Eco Tote Bag', 'Reusable cotton tote bag', 500) ON CONFLICT (id) DO NOTHING;
 INSERT INTO reward_catalog (id, name, description, points_cost) VALUES ('10000000-0000-0000-0000-000000000002', 'Coffee Gift Card', 'Digital gift card for local coffee shops', 1000) ON CONFLICT (id) DO NOTHING;
 INSERT INTO reward_catalog (id, name, description, points_cost) VALUES ('10000000-0000-0000-0000-000000000003', 'Stainless Steel Water Bottle', 'Insulated reusable water bottle', 1500) ON CONFLICT (id) DO NOTHING;
+=======
+INSERT INTO reward_catalog (id, name, description, points_cost) VALUES ('10000000-0000-0000-0000-000000000001', 'Eco Tote Bag', 'Reusable cotton tote bag', 500) ON CONFLICT (id) DO NOTHING;
+INSERT INTO reward_catalog (id, name, description, points_cost) VALUES ('10000000-0000-0000-0000-000000000002', 'Coffee Gift Card', 'Digital gift card for local coffee shops', 1000) ON CONFLICT (id) DO NOTHING;
+INSERT INTO reward_catalog (id, name, description, points_cost) VALUES ('10000000-0000-0000-0000-000000000003', 'Stainless Steel Water Bottle', 'Insulated reusable water bottle', 1500) ON CONFLICT (id) DO NOTHING;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c

@@ -30,7 +30,16 @@ public class PickupController {
     }
 
     private UUID user(HttpServletRequest r) {
+<<<<<<< HEAD
         return com.ecoloop.common.SessionUser.require(r).id();
+=======
+        var s = r.getSession(false);
+        if (s == null || s.getAttribute("USER_ID") == null) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                HttpStatus.UNAUTHORIZED, "Authentication required");
+        }
+        return UUID.fromString(String.valueOf(s.getAttribute("USER_ID")));
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 
     public record CreatePickup(
@@ -38,6 +47,7 @@ public class PickupController {
         @NotBlank String address,
         Instant scheduledAt) {}
 
+<<<<<<< HEAD
     @PostMapping(value = "/submit-household", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
     public PickupWithDevice submitHousehold(
         @RequestPart("image") org.springframework.web.multipart.MultipartFile image,
@@ -49,6 +59,8 @@ public class PickupController {
         return pickupService.submitHouseholdPickup(userId, image, condition, address, scheduledAt);
     }
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @PostMapping
     public PickupWithDevice create(@Valid @RequestBody CreatePickup body, HttpServletRequest r) {
         PickupRequest pickup = pickupService.createPickup(user(r), body.deviceId(), body.address(), body.scheduledAt());

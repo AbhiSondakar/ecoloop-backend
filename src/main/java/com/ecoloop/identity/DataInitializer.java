@@ -1,7 +1,10 @@
 package com.ecoloop.identity;
 
+<<<<<<< HEAD
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,13 +17,17 @@ import java.util.UUID;
 @Configuration
 public class DataInitializer {
 
+<<<<<<< HEAD
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @Bean
     CommandLineRunner seedAdminUser(UserRepository users,
                                     PasswordEncoder encoder,
                                     Environment env) {
         return args -> {
+<<<<<<< HEAD
             boolean seedEnabled = Boolean.parseBoolean(env.getProperty("ecoloop.security.seed-admin.enabled",
                 env.getProperty("SEED_ADMIN_ENABLED", "false")));
 
@@ -48,6 +55,18 @@ public class DataInitializer {
             User admin = new User();
             admin.setId(UUID.randomUUID());
             admin.setEmail(normalized);
+=======
+            String email = env.getProperty("ADMIN_EMAIL", "admin@ecoloop.local");
+            String password = env.getProperty("ADMIN_PASSWORD", "Admin@123");
+
+            if (users.findByEmailIgnoreCase(email).isPresent()) {
+                return;
+            }
+
+            User admin = new User();
+            admin.setId(UUID.randomUUID());
+            admin.setEmail(email);
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
             admin.setPasswordHash(encoder.encode(password));
             admin.setName("System Administrator");
             admin.setRole(User.Role.ADMIN.name());
@@ -55,7 +74,10 @@ public class DataInitializer {
             admin.setCreatedAt(Instant.now());
             admin.setUpdatedAt(Instant.now());
             users.save(admin);
+<<<<<<< HEAD
             log.info("Admin user seeded successfully with configured credentials");
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         };
     }
 }

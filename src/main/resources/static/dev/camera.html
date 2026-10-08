@@ -1,0 +1,26 @@
+<!doctype html>
+    <html>
+        <body> 
+            <h1>EcoLoop Camera Classifier</h1>
+            <video id="video" autoplay playsinline width="640"></video>
+            <button id="capture">Capture</button>
+            <canvas id="canvas" hidden></canvas>
+            <pre id="result"></pre>
+            <script>
+                const video=document.getElementById('video');
+                const canvas=document.getElementById('canvas');
+                const result=document.getElementById('result');
+                navigator.mediaDevices.getUserMedia({video:true}).then(stream=>video.srcObject=stream);
+                document.getElementById('capture').onclick=async()=>{
+                    canvas.width=video.videoWidth;
+                    canvas.height=video.videoHeight;
+                    canvas.getContext('2d').drawImage(video,0,0);
+                    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg'));
+                    const form=new FormData();
+                    form.append('image',blob,'capture.jpg');
+                    const response=await fetch('/api/dev/camera-classify',{method:'POST',body:form,credentials:'include'});
+                    result.textContent=await response.text();
+                };
+            </script>
+        </body>
+    </html>

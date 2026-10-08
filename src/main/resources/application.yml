@@ -6,9 +6,13 @@ server:
       cookie:
         name: ECOLOOP_SESSION
         http-only: true
+<<<<<<< HEAD
         same-site: ${COOKIE_SAME_SITE:none}
         # TLS is mandatory by default. Set false only for an explicitly local HTTP environment.
         secure: ${COOKIE_SECURE:true}
+=======
+        same-site: lax
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 spring:
   threads:
     virtual:
@@ -17,8 +21,13 @@ spring:
     name: ecoloop
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ecoloop}
+<<<<<<< HEAD
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+=======
+    username: ${DATABASE_USERNAME:ecoloop}
+    password: ${DATABASE_PASSWORD:ecoloop}
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     hikari:
       maximum-pool-size: ${DB_POOL_MAX:15}
       minimum-idle: ${DB_POOL_MIN:5}
@@ -44,8 +53,13 @@ spring:
       url: ${REDIS_URL:redis://localhost:6379}
   servlet:
     multipart:
+<<<<<<< HEAD
       max-file-size: 5MB
       max-request-size: 5MB
+=======
+      max-file-size: 10MB
+      max-request-size: 10MB
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 management:
   endpoints:
     web:
@@ -57,6 +71,7 @@ management:
 ecoloop:
   ai:
     provider: ${ECOLOOP_AI_PROVIDER:stub}
+<<<<<<< HEAD
     max-concurrent-classifications: ${ECOLOOP_MAX_CONCURRENT_CLASSIFICATIONS:1}
   upload:
     dir: ${ECOLOOP_UPLOAD_DIR:uploads/devices}
@@ -84,8 +99,23 @@ ai:
 
 cors:
   allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:5173,http://localhost:8081}
+=======
+  upload:
+    dir: ${ECOLOOP_UPLOAD_DIR:uploads/devices}
+ai:
+  roboflow:
+    api-key: ${ROBOFLOW_API_KEY:}
+    workflow: ${ROBOFLOW_WORKFLOW:abhishek-sondakar-k3rfj/e-waste-qmxtt-zuyip-1-yolo26n-t1}
+
+cors:
+  allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://localhost:8081}
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 
 logging:
   level:
     root: INFO
+<<<<<<< HEAD
     com.ecoloop: ${APP_LOG_LEVEL:INFO}
+=======
+    com.ecoloop: ${APP_LOG_LEVEL:DEBUG}
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c

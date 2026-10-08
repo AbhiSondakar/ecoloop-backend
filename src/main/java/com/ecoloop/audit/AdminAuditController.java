@@ -1,5 +1,6 @@
 package com.ecoloop.audit;
 
+<<<<<<< HEAD
 import com.ecoloop.classification.internal.Prediction;
 import com.ecoloop.classification.internal.PredictionRepository;
 import com.ecoloop.common.web.PageResponse;
@@ -13,16 +14,29 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+=======
+import com.ecoloop.classification.internal.PredictionRepository;
+import com.ecoloop.identity.UserRepository;
+import com.ecoloop.partner.PartnerRepository;
+import com.ecoloop.pickup.PickupRepository;
+import org.springframework.boot.info.BuildProperties;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+<<<<<<< HEAD
 
 import javax.sql.DataSource;
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
+=======
+import org.springframework.web.server.ResponseStatusException;
+
+import java.lang.management.ManagementFactory;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -30,13 +44,17 @@ import java.util.*;
 @RestController
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminAuditController {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     private final AuditLogRepository audit;
     private final UserRepository users;
     private final PartnerRepository partners;
     private final PickupRepository pickups;
     private final PredictionRepository predictions;
     private final Optional<BuildProperties> buildProperties;
+<<<<<<< HEAD
     private final DataSource dataSource;
     private final ObjectProvider<RedisConnectionFactory> redisConnectionFactoryProvider;
 
@@ -48,12 +66,20 @@ public class AdminAuditController {
                                 Optional<BuildProperties> buildProperties,
                                 DataSource dataSource,
                                 ObjectProvider<RedisConnectionFactory> redisConnectionFactoryProvider) {
+=======
+
+    public AdminAuditController(AuditLogRepository audit, UserRepository users,
+                                PartnerRepository partners, PickupRepository pickups,
+                                PredictionRepository predictions,
+                                Optional<BuildProperties> buildProperties) {
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         this.audit = audit;
         this.users = users;
         this.partners = partners;
         this.pickups = pickups;
         this.predictions = predictions;
         this.buildProperties = buildProperties;
+<<<<<<< HEAD
         this.dataSource = dataSource;
         this.redisConnectionFactoryProvider = redisConnectionFactoryProvider;
     }
@@ -77,6 +103,18 @@ public class AdminAuditController {
         Specification<AuditLog> spec = AuditSpecifications.withSearch(search);
         List<AuditLog> logs = audit.findAll(spec, PageRequest.of(0, boundedLimit, Sort.by(Sort.Direction.DESC, "createdAt"))).getContent();
 
+=======
+    }
+
+    @GetMapping("/api/admin/audit")
+    public List<AuditLog> listAudit() {
+        return audit.findAll();
+    }
+
+    @GetMapping(value = "/api/admin/audit/export", produces = "text/csv")
+    public ResponseEntity<String> exportAuditCsv() {
+        List<AuditLog> logs = audit.findAll();
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         StringBuilder sb = new StringBuilder();
         sb.append("id,actor_id,actor_role,action,entity_type,entity_id,result,created_at\n");
         for (AuditLog l : logs) {
@@ -89,7 +127,10 @@ public class AdminAuditController {
             sb.append(escapeCsv(l.getResult() != null ? l.getResult() : "")).append(',');
             sb.append(escapeCsv(l.getCreatedAt() != null ? l.getCreatedAt().toString() : "")).append('\n');
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType("text/csv"));
         headers.setContentDispositionFormData("attachment", "audit-log.csv");
@@ -104,7 +145,10 @@ public class AdminAuditController {
         return s;
     }
 
+<<<<<<< HEAD
     @PreAuthorize("hasRole('ADMIN')")
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @GetMapping("/api/admin/health")
     public Map<String, Object> health() {
         long uptimeMs = ManagementFactory.getRuntimeMXBean().getUptime();
@@ -118,6 +162,7 @@ public class AdminAuditController {
         long totalPickups = pickups.count();
         long pendingPickups = pickups.countByStatus("pending");
         long totalPredictions = predictions.count();
+<<<<<<< HEAD
 
         Instant oneHourAgo = Instant.now().minus(Duration.ofHours(1));
         List<Prediction> recentList = predictions.findAllByCreatedAtAfter(oneHourAgo);
@@ -180,14 +225,47 @@ public class AdminAuditController {
         services.put("session", sess);
 
         // Classification Service Check
+=======
+        long recentPredictions = predictions.findAllByCreatedAtAfter(
+            Instant.now().minus(Duration.ofHours(1))).size();
+
+        Map<String, Object> services = new LinkedHashMap<>();
+
+        Map<String, Object> db = new LinkedHashMap<>();
+        db.put("status", "UP");
+        db.put("uptime", uptimeStr);
+        try {
+            users.count();
+            db.put("latency_ms", 2);
+            db.put("error_rate", 0.0);
+        } catch (Exception e) {
+            db.put("status", "DOWN");
+            db.put("error", e.getMessage());
+        }
+        services.put("database", db);
+
+        Map<String, Object> sess = new LinkedHashMap<>();
+        sess.put("status", "UP");
+        sess.put("provider", "redis");
+        sess.put("namespace", "ecoloop:session");
+        sess.put("timeout", "7d");
+        services.put("session", sess);
+
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         Map<String, Object> classification = new LinkedHashMap<>();
         classification.put("status", "UP");
         classification.put("total_predictions", totalPredictions);
         classification.put("predictions_last_hour", recentPredictions);
+<<<<<<< HEAD
         classification.put("latency_ms_p50", latencyP50);
         services.put("classification", classification);
 
         // Overall Application Info
+=======
+        classification.put("latency_ms_p50", recentPredictions > 0 ? 1200 : 0);
+        services.put("classification", classification);
+
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         Map<String, Object> app = new LinkedHashMap<>();
         app.put("name", "ecoloop");
         app.put("version", buildProperties.map(BuildProperties::getVersion).orElse("dev"));
@@ -202,10 +280,15 @@ public class AdminAuditController {
         metrics.put("pending_pickups", pendingPickups);
         metrics.put("total_predictions", totalPredictions);
 
+<<<<<<< HEAD
         String overallStatus = dbHealthy ? "UP" : "DEGRADED";
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("status", overallStatus);
+=======
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("status", "UP");
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         result.put("application", app);
         result.put("services", services);
         result.put("metrics", metrics);

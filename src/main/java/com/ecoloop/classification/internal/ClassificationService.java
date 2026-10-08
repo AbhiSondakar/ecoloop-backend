@@ -6,6 +6,7 @@ import com.ecoloop.classification.api.VisionProvider;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -16,6 +17,13 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
+=======
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,20 +32,33 @@ import org.slf4j.LoggerFactory;
 
         private static final Logger log = LoggerFactory.getLogger(ClassificationService.class);
 
+<<<<<<< HEAD
     private final List<VisionProvider> providers;
     private final StubVisionProvider stubProvider;
     private final PredictionRepository predictionRepository;
     private final Semaphore classificationPermits;
+=======
+        private final List<VisionProvider> providers;
+    private final StubVisionProvider stubProvider;
+    private final PredictionRepository predictionRepository;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 
     public ClassificationService(
             List<VisionProvider> providers,
             StubVisionProvider stubProvider,
+<<<<<<< HEAD
             PredictionRepository predictionRepository,
             @Value("${ecoloop.ai.max-concurrent-classifications:1}") int maxConcurrentClassifications) {
         this.providers = providers;
         this.stubProvider = stubProvider;
         this.predictionRepository = predictionRepository;
         this.classificationPermits = new Semaphore(Math.max(1, maxConcurrentClassifications), true);
+=======
+            PredictionRepository predictionRepository) {
+        this.providers = providers;
+        this.stubProvider = stubProvider;
+        this.predictionRepository = predictionRepository;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 
     @Override
@@ -46,6 +67,7 @@ import org.slf4j.LoggerFactory;
     }
 
     @Override
+<<<<<<< HEAD
     public ClassificationResult classify(Path imagePath, String mime, UUID deviceId, String imageUrl) {
         boolean permitAcquired = false;
         try {
@@ -67,6 +89,8 @@ import org.slf4j.LoggerFactory;
     }
 
     @Override
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @Transactional
     public ClassificationResult classify(byte[] image, String mime, UUID deviceId, String imageUrl) {
         long start = System.currentTimeMillis();
@@ -105,7 +129,11 @@ import org.slf4j.LoggerFactory;
             if (!provider.isConfigured()) continue;
             try {
                 ClassificationResult result = provider.classify(image, mime);
+<<<<<<< HEAD
                 if (result != null) {
+=======
+                if (result != null && !"other".equals(result.category())) {
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
                     return result;
                 }
             } catch (Exception ignored) {

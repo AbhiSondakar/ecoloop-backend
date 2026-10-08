@@ -1,5 +1,6 @@
 package com.ecoloop.common;
 
+<<<<<<< HEAD
 import com.ecoloop.identity.UserPrincipal;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -38,4 +39,25 @@ public record SessionUser(UUID id, String role) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
         }
     }
+=======
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.UUID;
+
+public record SessionUser(UUID id, String role) {
+  public static SessionUser require(HttpServletRequest request) {
+    var session = request.getSession(false);
+    if (session == null || session.getAttribute("USER_ID") == null) {
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Authentication required");
+    }
+    return new SessionUser(UUID.fromString(String.valueOf(session.getAttribute("USER_ID"))), String.valueOf(session.getAttribute("ROLE")));
+  }
+
+  public void requireRole(String expected) {
+    if (!expected.equalsIgnoreCase(role)) {
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Insufficient permissions");
+    }
+  }
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

@@ -23,23 +23,42 @@ public class UserController {
     private final PushTokenRepository pushTokens;
     private final NotificationPreferenceRepository notificationPrefs;
     private final com.ecoloop.rewards.RewardLedgerRepository ledger;
+<<<<<<< HEAD
     private final SessionRevocationService sessionRevocationService;
 
     public UserController(UserRepository users, PasswordEncoder encoder, PushTokenRepository pushTokens,
                           NotificationPreferenceRepository notificationPrefs,
                           com.ecoloop.rewards.RewardLedgerRepository ledger,
                           SessionRevocationService sessionRevocationService) {
+=======
+
+    public UserController(UserRepository users, PasswordEncoder encoder, PushTokenRepository pushTokens,
+                          NotificationPreferenceRepository notificationPrefs,
+                          com.ecoloop.rewards.RewardLedgerRepository ledger) {
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         this.users = users;
         this.encoder = encoder;
         this.pushTokens = pushTokens;
         this.notificationPrefs = notificationPrefs;
         this.ledger = ledger;
+<<<<<<< HEAD
         this.sessionRevocationService = sessionRevocationService;
     }
 
     private User current(HttpServletRequest request) {
         UUID userId = com.ecoloop.common.SessionUser.require(request).id();
         return users.findById(userId)
+=======
+    }
+
+    private User current(HttpServletRequest request) {
+        var session = request.getSession(false);
+        if (session == null || session.getAttribute("USER_ID") == null) {
+            throw new org.springframework.web.server.ResponseStatusException(
+                HttpStatus.UNAUTHORIZED, "Authentication required");
+        }
+        return users.findById(UUID.fromString(session.getAttribute("USER_ID").toString()))
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
             .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(
                 HttpStatus.UNAUTHORIZED, "User not found"));
     }
@@ -86,11 +105,17 @@ public class UserController {
             throw new org.springframework.web.server.ResponseStatusException(
                 HttpStatus.BAD_REQUEST, "Current password is invalid");
         }
+<<<<<<< HEAD
         PasswordPolicy.validate(body.newPassword());
         u.setPasswordHash(encoder.encode(body.newPassword()));
         u.setUpdatedAt(Instant.now());
         users.save(u);
         sessionRevocationService.revokeAllUserSessions(u.getEmail());
+=======
+        u.setPasswordHash(encoder.encode(body.newPassword()));
+        u.setUpdatedAt(Instant.now());
+        users.save(u);
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 
     @PostMapping("/license")

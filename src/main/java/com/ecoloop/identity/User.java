@@ -32,6 +32,12 @@ public class User {
     @Column(columnDefinition = "TEXT")
     private String address;
 
+<<<<<<< HEAD
+=======
+    @Column(name = "points_balance", nullable = false)
+    private int pointsBalance = 0;
+
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
@@ -44,12 +50,17 @@ public class User {
     protected User() {}
 
     public User(String email, String passwordHash, String name, String role) {
+<<<<<<< HEAD
         this.email = normalizeEmail(email);
+=======
+        this.email = email;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         this.passwordHash = passwordHash;
         this.name = name;
         this.role = role;
     }
 
+<<<<<<< HEAD
     public static String normalizeEmail(String raw) {
         return raw == null ? null : raw.trim().toLowerCase(java.util.Locale.ROOT);
     }
@@ -58,6 +69,12 @@ public class User {
     public void setId(UUID id) { this.id = id; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = normalizeEmail(email); }
+=======
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
     public String getPasswordHash() { return passwordHash; }
@@ -68,6 +85,11 @@ public class User {
     public void setName(String name) { this.name = name; }
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+<<<<<<< HEAD
+=======
+    public int getPointsBalance() { return pointsBalance; }
+    public void setPointsBalance(int pointsBalance) { this.pointsBalance = pointsBalance; }
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
     public Instant getCreatedAt() { return createdAt; }

@@ -23,12 +23,15 @@ public class RoutingOffer {
     @Column(name = "expires_at")
     private Instant expiresAt;
 
+<<<<<<< HEAD
     @Column(name = "score")
     private Double score;
 
     @Column(name = "rejection_reason", columnDefinition = "TEXT")
     private String rejectionReason;
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
 
@@ -40,6 +43,7 @@ public class RoutingOffer {
         this.expiresAt = expiresAt;
     }
 
+<<<<<<< HEAD
     public RoutingOffer(UUID pickupId, UUID partnerId, Instant expiresAt, Double score) {
         this.pickupId = pickupId;
         this.partnerId = partnerId;
@@ -47,6 +51,8 @@ public class RoutingOffer {
         this.score = score;
     }
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public UUID getPickupId() { return pickupId; }
@@ -57,10 +63,13 @@ public class RoutingOffer {
     public void setStatus(String status) { this.status = status; }
     public Instant getExpiresAt() { return expiresAt; }
     public void setExpiresAt(Instant expiresAt) { this.expiresAt = expiresAt; }
+<<<<<<< HEAD
     public Double getScore() { return score; }
     public void setScore(Double score) { this.score = score; }
     public String getRejectionReason() { return rejectionReason; }
     public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 
@@ -72,14 +81,20 @@ public class RoutingOffer {
     }
 
     public void reject() {
+<<<<<<< HEAD
         reject(null);
     }
 
     public void reject(String reason) {
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         if (!"offered".equals(status) || (expiresAt != null && expiresAt.isBefore(Instant.now()))) {
             throw new IllegalStateException("Offer is no longer available");
         }
         status = "rejected";
+<<<<<<< HEAD
         this.rejectionReason = reason;
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 }

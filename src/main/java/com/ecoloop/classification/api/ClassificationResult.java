@@ -4,6 +4,7 @@ public record ClassificationResult(
     String category,
     double confidence,
     String provider,
+<<<<<<< HEAD
     String model,
     String status
 ) {
@@ -26,3 +27,7 @@ public record ClassificationResult(
         return status == null || status.isBlank() ? "completed" : status;
     }
 }
+=======
+    String model
+) {}
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c

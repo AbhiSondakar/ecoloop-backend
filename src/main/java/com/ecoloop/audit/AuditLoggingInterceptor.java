@@ -1,5 +1,6 @@
 package com.ecoloop.audit;
 
+<<<<<<< HEAD
 import com.ecoloop.common.SessionUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,10 +22,32 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+=======
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.util.UUID;
+
+/**
+ * Logs every handled request (method, URI, query, status, latency, actor) and records an
+ * {@link AuditLog} entry for mutating /api requests so "what task was performed" and
+ * "the flow of each request" are observable. Lives in the isolated {@code audit} module and
+ * depends only on the servlet API + Spring Security framework classes, reading actor identity
+ * from the session attributes ({@code USER_ID}/{@code ROLE}) set by {@code AuthController}.
+ */
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 @Component
 public class AuditLoggingInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger("ecoloop.audit");
+<<<<<<< HEAD
     private static final int MAX_DETAIL_FIELDS = 20;
     private static final int MAX_DETAIL_VALUE_LENGTH = 256;
     private static final Set<String> SENSITIVE_FIELD_NAMES = Set.of(
@@ -38,6 +61,13 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
     public AuditLoggingInterceptor(AuditService auditService, ObjectMapper objectMapper) {
         this.auditService = auditService;
         this.objectMapper = objectMapper;
+=======
+
+    private final AuditService auditService;
+
+    public AuditLoggingInterceptor(AuditService auditService) {
+        this.auditService = auditService;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     }
 
     @Override
@@ -45,7 +75,14 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
                              HttpServletResponse response,
                              Object handler) {
         request.setAttribute("ecoloop.audit.start", System.nanoTime());
+<<<<<<< HEAD
         log.info("{} {}", request.getMethod(), request.getRequestURI());
+=======
+        log.info("{} {}?{}",
+                request.getMethod(),
+                request.getRequestURI(),
+                request.getQueryString() == null ? "" : request.getQueryString());
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         return true;
     }
 
@@ -60,6 +97,7 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
         String method = request.getMethod();
         String uri = request.getRequestURI();
 
+<<<<<<< HEAD
         String actorIdStr = SessionUser.current().map(u -> u.id().toString()).orElse("anonymous");
         String role = SessionUser.current().map(SessionUser::role).orElse("NONE");
 
@@ -68,6 +106,13 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
 
         if (ex != null) {
             log.warn("Request {} {} completed with exception: {}", method, uri, ex.getMessage());
+=======
+        log.info("{} {} status={} latency={}ms actor={} role={}",
+                method, uri, status, ms, principalName(request), roleName(request));
+
+        if (ex != null) {
+            log.warn("Request {} {} completed with exception: {}", method, uri, ex.toString());
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         }
 
         if (uri.startsWith("/api/") && isMutating(method)) {
@@ -77,8 +122,13 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
 
     private void recordAudit(HttpServletRequest request, int status) {
         try {
+<<<<<<< HEAD
             UUID actorId = SessionUser.current().map(SessionUser::id).orElse(null);
             String role = SessionUser.current().map(SessionUser::role).orElse(null);
+=======
+            UUID actorId = userId(request);
+            String role = roleName(request);
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 
             String[] segments = request.getRequestURI().replaceFirst("^/api/", "").split("/", 0);
             String entityType = segments.length > 0 && !segments[0].isBlank() ? segments[0] : null;
@@ -88,8 +138,12 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
             String result = status >= 500 ? "server_error"
                     : (status >= 400 ? "client_error" : "success");
 
+<<<<<<< HEAD
             auditService.record(actorId, role, action, entityType, entityId, result,
                 requestDetails(request));
+=======
+            auditService.record(actorId, role, action, entityType, entityId, result);
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         } catch (Exception e) {
             log.warn("Audit recording failed for {} {}: {}",
                     request.getMethod(), request.getRequestURI(), e.getMessage());
@@ -101,17 +155,64 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
                 || "PATCH".equals(method) || "DELETE".equals(method);
     }
 
+<<<<<<< HEAD
     private static UUID extractId(String[] segments) {
         for (int index = segments.length - 1; index >= 0; index--) {
             try {
                 return UUID.fromString(segments[index]);
             } catch (IllegalArgumentException ignored) {
                 // Endpoint action suffixes, such as /{id}/role, are not entity identifiers.
+=======
+    private static String principalName(HttpServletRequest request) {
+        Authentication a = SecurityContextHolder.getContext().getAuthentication();
+        if (a != null && a.isAuthenticated() && a.getPrincipal() != null
+                && !"anonymousUser".equals(a.getPrincipal())) {
+            return a.getName();
+        }
+        HttpSession s = request.getSession(false);
+        if (s != null) {
+            Object uid = s.getAttribute("USER_ID");
+            if (uid != null) return uid.toString();
+        }
+        return "anonymous";
+    }
+
+    private static String roleName(HttpServletRequest request) {
+        HttpSession s = request.getSession(false);
+        if (s != null) {
+            Object r = s.getAttribute("ROLE");
+            if (r != null) return r.toString();
+        }
+        Authentication a = SecurityContextHolder.getContext().getAuthentication();
+        if (a != null && a.isAuthenticated() && a.getPrincipal() != null
+                && !"anonymousUser".equals(a.getPrincipal())) {
+            return a.getAuthorities().toString();
+        }
+        return null;
+    }
+
+    private static UUID userId(HttpServletRequest request) {
+        Authentication a = SecurityContextHolder.getContext().getAuthentication();
+        if (a != null && a.isAuthenticated() && a.getPrincipal() != null
+                && !"anonymousUser".equals(a.getPrincipal())) {
+            try {
+                return UUID.fromString(a.getName());
+            } catch (IllegalArgumentException ignored) { }
+        }
+        HttpSession s = request.getSession(false);
+        if (s != null) {
+            Object uid = s.getAttribute("USER_ID");
+            if (uid != null) {
+                try {
+                    return UUID.fromString(uid.toString());
+                } catch (IllegalArgumentException ignored) { }
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
             }
         }
         return null;
     }
 
+<<<<<<< HEAD
     private Map<String, Object> requestDetails(HttpServletRequest request) {
         Map<String, Object> details = new LinkedHashMap<>();
         details.put("method", request.getMethod());
@@ -224,4 +325,15 @@ public class AuditLoggingInterceptor implements HandlerInterceptor {
         }
         return value.substring(0, MAX_DETAIL_VALUE_LENGTH) + "…";
     }
+=======
+    private static UUID extractId(String[] segments) {
+        if (segments.length < 2) return null;
+        String last = segments[segments.length - 1];
+        try {
+            return UUID.fromString(last);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

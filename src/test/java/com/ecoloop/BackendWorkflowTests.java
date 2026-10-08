@@ -3,6 +3,7 @@ package com.ecoloop;
 import com.ecoloop.classification.api.ClassificationResult;
 import com.ecoloop.classification.internal.StubVisionProvider;
 import com.ecoloop.routing.RoutingOffer;
+<<<<<<< HEAD
 import com.ecoloop.routing.RoutingOfferRepository;
 import com.ecoloop.routing.RoutingService;
 import org.junit.jupiter.api.Test;
@@ -10,18 +11,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+=======
+import org.junit.jupiter.api.Test;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 
 import java.time.Instant;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+<<<<<<< HEAD
 @SpringBootTest
 @ActiveProfiles("test")
 class BackendWorkflowTests {
   @Autowired
   private RoutingOfferRepository routingOfferRepository;
 
+=======
+class BackendWorkflowTests {
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
   @Test void stubProviderReturnsDefaultResult() {
     var result = new StubVisionProvider().classify("phone".getBytes(), "image/jpeg");
     assertEquals("other", result.category());
@@ -34,6 +42,7 @@ class BackendWorkflowTests {
     assertThrows(IllegalStateException.class, offer::accept);
   }
 
+<<<<<<< HEAD
   @Test void expiredRoutingOfferCannotBeRejected() {
     var offer = new RoutingOffer(UUID.randomUUID(), UUID.randomUUID(), Instant.now().minusSeconds(60));
     assertThrows(IllegalStateException.class, offer::reject);
@@ -51,12 +60,15 @@ class BackendWorkflowTests {
     assertEquals("no thanks", offer2.getRejectionReason());
   }
 
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
   @Test void routingOfferCanBeRejectedOnce() {
     var offer = new RoutingOffer(UUID.randomUUID(), UUID.randomUUID(), Instant.now().plusSeconds(60));
     offer.reject();
     assertEquals("rejected", offer.getStatus());
     assertThrows(IllegalStateException.class, offer::reject);
   }
+<<<<<<< HEAD
 
   @Autowired
   private RoutingService routingService;
@@ -77,4 +89,6 @@ class BackendWorkflowTests {
     assertEquals("expired", refreshed.getStatus(),
         "Service enforcement must write status='expired' for stale offers so the UI no longer shows 'offered'");
   }
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

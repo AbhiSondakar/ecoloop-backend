@@ -1,11 +1,15 @@
 package com.ecoloop.pickup;
 
+<<<<<<< HEAD
 import com.ecoloop.common.web.PageResponse;
 import com.ecoloop.partner.PartnerRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+=======
+import com.ecoloop.partner.PartnerRepository;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +33,7 @@ public class AdminPickupController {
     this.pickupService = pickupService;
   }
 
+<<<<<<< HEAD
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping
   public PageResponse<PickupWithDevice> list(@RequestParam(defaultValue = "0") int page,
@@ -44,11 +49,19 @@ public class AdminPickupController {
     List<PickupWithDevice> enriched = pickupService.enrich(pickupPage.getContent());
     return new PageResponse<>(enriched, pickupPage.getTotalElements(), pickupPage.getTotalPages(),
             pickupPage.getNumber(), pickupPage.getSize());
+=======
+  @GetMapping
+  public List<PickupWithDevice> list() {
+    return pickupService.enrich(pickups.findAll());
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
   }
 
   public record ReassignRequest(UUID partnerId) {}
 
+<<<<<<< HEAD
   @PreAuthorize("hasRole('ADMIN')")
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
   @PostMapping("/{id}/reassign")
   public PickupWithDevice reassign(@PathVariable UUID id,
                                 @RequestBody(required = false) ReassignRequest body) {

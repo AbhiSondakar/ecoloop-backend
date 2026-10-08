@@ -1,5 +1,6 @@
 package com.ecoloop.partner;
 
+<<<<<<< HEAD
 import com.ecoloop.common.web.PageResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,12 +11,19 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+=======
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/admin/partners")
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminPartnerController {
+<<<<<<< HEAD
 
     private final PartnerRepository partners;
     private final PartnerLifecycleService lifecycleService;
@@ -66,4 +74,18 @@ public class AdminPartnerController {
     public PartnerDto suspend(@PathVariable UUID id) {
         return PartnerDto.from(lifecycleService.suspend(id), true);
     }
+=======
+  private final PartnerRepository partners;
+  public AdminPartnerController(PartnerRepository partners){this.partners=partners;}
+  @GetMapping public List<Partner> list(){return partners.findAll();}
+  @GetMapping("/{id}")
+  public Partner get(@PathVariable UUID id) {
+    return partners.findById(id)
+      .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND, "Partner not found"));
+  }
+  @PostMapping("/{id}/approve") public Partner approve(@PathVariable UUID id){return change(id,"approved");}
+  @PostMapping("/{id}/reject") public Partner reject(@PathVariable UUID id){return change(id,"rejected");}
+  @PostMapping("/{id}/suspend") public Partner suspend(@PathVariable UUID id){return change(id,"suspended");}
+  private Partner change(UUID id,String status){var p=partners.findById(id).orElseThrow(()->new org.springframework.web.server.ResponseStatusException(HttpStatus.NOT_FOUND,"Partner not found"));p.setStatus(status);return partners.save(p);}
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

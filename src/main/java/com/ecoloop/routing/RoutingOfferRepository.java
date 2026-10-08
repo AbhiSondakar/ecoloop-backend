@@ -1,5 +1,6 @@
 package com.ecoloop.routing;
 
+<<<<<<< HEAD
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,10 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.Instant;
 import java.util.Collection;
+=======
+import org.springframework.data.jpa.repository.JpaRepository;
+
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,6 +22,7 @@ public interface RoutingOfferRepository extends JpaRepository<RoutingOffer, UUID
     List<RoutingOffer> findAllByPartnerIdOrderByCreatedAtDesc(UUID partnerId);
     Optional<RoutingOffer> findByIdAndPartnerId(UUID id, UUID partnerId);
     List<RoutingOffer> findAllByPickupId(UUID pickupId);
+<<<<<<< HEAD
     boolean existsByPickupIdAndPartnerId(UUID pickupId, UUID partnerId);
     boolean existsByPickupIdAndPartnerIdAndStatusIn(UUID pickupId, UUID partnerId, Collection<String> statuses);
 
@@ -31,4 +37,6 @@ public interface RoutingOfferRepository extends JpaRepository<RoutingOffer, UUID
     @Modifying
     @Query("UPDATE RoutingOffer o SET o.status = 'expired' WHERE o.id IN :ids AND o.status = 'offered'")
     int markAsExpiredInBatch(@Param("ids") Collection<UUID> ids);
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 }

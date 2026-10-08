@@ -22,6 +22,7 @@ public class IdentityService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+<<<<<<< HEAD
         String normalized = User.normalizeEmail(email);
         User u = users.findByEmailIgnoreCase(normalized).orElseThrow(() ->
             new UsernameNotFoundException("User not found"));
@@ -32,6 +33,23 @@ public class IdentityService implements UserDetailsService {
         String normalized = User.normalizeEmail(email);
         User u = users.findByEmailIgnoreCase(normalized).orElseThrow(() ->
             new UsernameNotFoundException("User not found"));
+=======
+        User u = users.findByEmail(email).orElseThrow(() ->
+            new UsernameNotFoundException("User not found: " + email));
+        return new org.springframework.security.core.userdetails.User(
+            u.getEmail(),
+            u.getPasswordHash(),
+            u.isActive(),
+            true,
+            true,
+            true,
+            List.of(new SimpleGrantedAuthority("ROLE_" + u.getRole())));
+    }
+
+    public UserDto findByEmail(String email) {
+        User u = users.findByEmail(email).orElseThrow(() ->
+            new UsernameNotFoundException("User not found: " + email));
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
         return toDto(u);
     }
 

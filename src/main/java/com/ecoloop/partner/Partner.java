@@ -39,8 +39,13 @@ public class Partner {
     @Column(precision = 3, scale = 2)
     private BigDecimal rating = BigDecimal.ZERO;
 
+<<<<<<< HEAD
     @Column(name = "license_upload_id")
     private UUID licenseUploadId;
+=======
+    @Column(name = "active_job_count", nullable = false)
+    private int activeJobCount = 0;
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
@@ -69,8 +74,11 @@ public class Partner {
     public void setStatus(String status) { this.status = status; }
     public String getLicenseNo() { return licenseNo; }
     public void setLicenseNo(String licenseNo) { this.licenseNo = licenseNo; }
+<<<<<<< HEAD
     public UUID getLicenseUploadId() { return licenseUploadId; }
     public void setLicenseUploadId(UUID licenseUploadId) { this.licenseUploadId = licenseUploadId; }
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public String getServiceAreas() { return serviceAreas; }
     public void setServiceAreas(String serviceAreas) { this.serviceAreas = serviceAreas; }
     public String getCapabilities() { return capabilities; }
@@ -79,6 +87,11 @@ public class Partner {
     public void setCapacity(int capacity) { this.capacity = capacity; }
     public BigDecimal getRating() { return rating; }
     public void setRating(BigDecimal rating) { this.rating = rating; }
+<<<<<<< HEAD
+=======
+    public int getActiveJobCount() { return activeJobCount; }
+    public void setActiveJobCount(int activeJobCount) { this.activeJobCount = activeJobCount; }
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }

@@ -1,6 +1,10 @@
 spring:
   datasource:
+<<<<<<< HEAD
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+=======
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
     driver-class-name: org.h2.Driver
     username: sa
     password: 
@@ -23,8 +27,11 @@ server:
 ecoloop:
   ai:
     provider: stub
+<<<<<<< HEAD
   routing:
     offer-expiration:
       enabled: false
       interval-ms: 60000
       batch-size: 100
+=======
+>>>>>>> 91b8f441aff11a409c373366a84eaa9de4b4e26c
